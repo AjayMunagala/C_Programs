@@ -257,7 +257,7 @@ void update()
 	if (recordToUpdate  != NULL)
 	{
 		underline("Current Details:");
-		printRecord(&(recordToUpdate  ->account));
+		printRecord(&(recordToUpdate  -> account));
 		underline("\nEnter updated Details:");
 		readAccountDetails(&(recordToUpdate  -> account), 0);
 		saveAccountsToDataBase();
@@ -306,8 +306,9 @@ void delete()
 		current = current -> next;
 	}
 
-	current->next = recordToDelete->next;
+	current -> next = recordToDelete -> next;
     free(recordToDelete);
     saveAccountsToDataBase();
     printf("Account deleted successfully.\n");
 }
+
