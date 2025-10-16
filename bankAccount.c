@@ -27,14 +27,15 @@ typedef struct node
 void displayMenu();
 void create();
 void show();
-void update();
-void delete();
+void update(Node*);
+void delete(Node*);
 void readAccountDetails(Bank*, int);
 void addAccountsToList(Bank);
 void pointCurrentToNull();
 void loadAccountsToList();
 int checkFileOpen(FILE*);
 int checkListEmpty();
+Node *searchRecord();
 
 Node *current = NULL;
 Node *head = NULL;
@@ -67,8 +68,20 @@ void displayMenu()
 		{
 		case '1': create(); break;
 		case '2': show();   break;
-		case '3': update(); break;
-		case '4': delete(); break;
+		case '3': 
+			{
+				Node *recordToUpdate = searchRecord();
+    			update(recordToUpdate);
+				break;
+			}
+			
+		case '4': 
+			{
+				Node *recordToDelete = searchRecord();
+    			delete(recordToDelete);
+				break;
+			}
+			
 		case '5': exit(0);
 		default : printf("please enter a avalid choice..!");
 		}
@@ -251,9 +264,9 @@ Node* searchRecord()
 }
 
 
-void update()
+void update(Node *recordToUpdate)
 {
-	Node *recordToUpdate  = searchRecord();
+	//Node *recordToUpdate  = searchRecord();
 	if (recordToUpdate  != NULL)
 	{
 		underline("Current Details:");
@@ -271,13 +284,13 @@ void update()
 }
 	
 
-void delete()
+void delete(Node *recordToDelete)
 {
-	Node *recordToDelete = searchRecord();
-
+	//Node *recordDelete  = searchRecord();
+	Node **temporaryNode = &head;
 	if (recordToDelete == NULL)
 	{
-		printf("No record found.");
+		printf("No record found.\n");
 		return;
 	}
 
@@ -290,25 +303,15 @@ void delete()
         pause();
         return;
     }
+    while (*temporaryNode != NULL && *temporaryNode != recordToDelete)
+    {
+        temporaryNode = &((*temporaryNode)->next);
+    }
 
-	if (recordToDelete == head)
-	{
-		head = head -> next;
-		free(recordToDelete);
-		saveAccountsToDataBase();
-		printf("Account deleted Successfully.\n");
-		return;
-	}
-	
-	current = head;
-	while (current != NULL && current -> next != recordToDelete)
-	{
-		current = current -> next;
-	}
-
-	current -> next = recordToDelete -> next;
+    *temporaryNode = recordToDelete->next;
     free(recordToDelete);
     saveAccountsToDataBase();
     printf("Account deleted successfully.\n");
 }
+
 
